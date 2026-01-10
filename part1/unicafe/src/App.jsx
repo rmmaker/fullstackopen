@@ -1,14 +1,43 @@
 import { useState } from "react";
 
-const Heading = ({ text }) => <h1>{text}</h1>;
-
 const Button = ({ onClick, text }) => <button onClick={onClick}>{text}</button>;
 
 const Feedback = ({ type, score }) => (
-  <p>
-    {type}: {score}
-  </p>
+  <tr>
+    <td>{type}</td>
+    <td>{score}</td>
+  </tr>
 );
+
+const Heading = ({ text }) => <h1>{text}</h1>;
+
+const StatisticLine = ({ title, score }) => (
+  <tr>
+    <td>{title}</td>
+    <td>{score}</td>
+  </tr>
+);
+
+const Statistics = ({ all, statistics }) => {
+  if (all > 0) {
+    return (
+      <>
+        {statistics.map((statistic, index) => (
+          <StatisticLine
+            key={index}
+            title={statistic.title}
+            score={statistic.score}
+          />
+        ))}
+      </>
+    );
+  }
+  return (
+    <tr>
+      <th>No feedback given</th>
+    </tr>
+  );
+};
 
 const App = () => {
   // save clicks of each button to its own state
@@ -17,6 +46,20 @@ const App = () => {
   const [bad, setBad] = useState(0);
   const [all, setAll] = useState(0);
   const [averageScore, setAverageScore] = useState(0);
+  const statistics = [
+    {
+      title: "All",
+      score: all,
+    },
+    {
+      title: "Average",
+      score: averageScore / all,
+    },
+    {
+      title: "Positive",
+      score: `${(good / all) * 100}%`,
+    },
+  ];
 
   const increaseGood = () => {
     setGood(good + 1);
@@ -40,12 +83,14 @@ const App = () => {
       <Button onClick={increaseNeutral} text={"neutral"} />
       <Button onClick={increaseBad} text={"bad"} />
       <Heading text={"Statistics"} />
-      <Feedback type={"Good"} score={good} />
-      <Feedback type={"Neutral"} score={neutral} />
-      <Feedback type={"Bad"} score={bad} />
-      <Feedback type={"All"} score={all} />
-      <Feedback type={"Average"} score={averageScore / all} />
-      <p>Positive: {(good / all) * 100}%</p>
+      <table>
+        <tbody>
+          <Feedback type={"Good"} score={good} />
+          <Feedback type={"Neutral"} score={neutral} />
+          <Feedback type={"Bad"} score={bad} />
+          <Statistics statistics={statistics} all={all} />
+        </tbody>
+      </table>
     </div>
   );
 };
