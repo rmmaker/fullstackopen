@@ -27,6 +27,8 @@ const App = () => {
       votes.map((vote, index) => (index === selected ? vote + 1 : vote))
     );
 
+  const maxVotedIndex = votes.indexOf(Math.max(...votes));
+
   return (
     <>
       <Heading text={"Anecdote of the day"} />
@@ -34,6 +36,8 @@ const App = () => {
       <p>Has {votes[selected]} votes</p>
       <Button onClick={voteForAnecdote} text={"vote"} />
       <Button onClick={displayRandomAnecdote} text={"next anecdote"} />
+      <Heading text={"Anecdote with most votes"} />
+      <p>{anecdotes[maxVotedIndex]}</p>
     </>
   );
 };
