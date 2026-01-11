@@ -2,6 +2,8 @@ import { useState } from "react";
 
 const Button = ({ onClick, text }) => <button onClick={onClick}>{text}</button>;
 
+const Heading = ({ text }) => <h1>{text}</h1>;
+
 const App = () => {
   const anecdotes = [
     "If it hurts, do it more often.",
@@ -15,14 +17,22 @@ const App = () => {
   ];
 
   const [selected, setSelected] = useState(0);
+  const [votes, setVotes] = useState(Array(anecdotes.length).fill(0));
 
   const displayRandomAnecdote = () => {
     setSelected(Math.floor(Math.random() * anecdotes.length));
   };
+  const voteForAnecdote = () =>
+    setVotes(
+      votes.map((vote, index) => (index === selected ? vote + 1 : vote))
+    );
 
   return (
     <>
-      <h1>{anecdotes[selected]}</h1>
+      <Heading text={"Anecdote of the day"} />
+      <p>{anecdotes[selected]}</p>
+      <p>Has {votes[selected]} votes</p>
+      <Button onClick={voteForAnecdote} text={"vote"} />
       <Button onClick={displayRandomAnecdote} text={"next anecdote"} />
     </>
   );
