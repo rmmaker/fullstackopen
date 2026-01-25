@@ -1,4 +1,4 @@
-const Header = ({ text }) => <h1>{text}</h1>;
+const Header = ({ text }) => <h2>{text}</h2>;
 
 const Part = ({ title, exercises }) => (
   <p>
@@ -14,8 +14,10 @@ const Content = ({ parts }) => {
 
 const Total = ({ parts }) => (
   <p>
-    Total: {parts.reduce((total, { exercises }) => total + exercises, 0)}{" "}
-    exercise(s)
+    <b>
+      Total: {parts.reduce((total, { exercises }) => total + exercises, 0)}{" "}
+      exercise(s)
+    </b>
   </p>
 );
 
