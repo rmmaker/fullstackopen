@@ -2,8 +2,11 @@ import { useState } from "react";
 import Person from "./components/Person";
 
 const App = () => {
-  const [persons, setPersons] = useState([{ id: 1, name: "Arto Hellas" }]);
+  const [persons, setPersons] = useState([
+    { id: 1, name: "Arto Hellas", number: "040-1234567" },
+  ]);
   const [newName, setNewName] = useState("");
+  const [newNumber, setNewNumber] = useState("");
 
   const addNewPerson = (event) => {
     event.preventDefault();
@@ -13,6 +16,7 @@ const App = () => {
     const newPersonObject = {
       id: persons.length + 1,
       name: newName,
+      number: newNumber,
     };
 
     if (nameExists || newName === "") {
@@ -20,11 +24,16 @@ const App = () => {
     } else {
       setPersons(persons.concat(newPersonObject));
       setNewName("");
+      setNewNumber("");
     }
   };
 
   const handleNewNameChange = (event) => {
     setNewName(event.target.value);
+  };
+
+  const handleNewNumberChange = (event) => {
+    setNewNumber(event.target.value);
   };
 
   return (
@@ -33,6 +42,9 @@ const App = () => {
       <form onSubmit={addNewPerson}>
         <div>
           name: <input value={newName} onChange={handleNewNameChange} />
+        </div>
+        <div>
+          number: <input value={newNumber} onChange={handleNewNumberChange} />
         </div>
         <div>
           <button type="submit">add</button>
