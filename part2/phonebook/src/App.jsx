@@ -2,17 +2,25 @@ import { useState } from "react";
 import Person from "./components/Person";
 
 const App = () => {
-  const [persons, setPersons] = useState([{ name: "Arto Hellas" }]);
+  const [persons, setPersons] = useState([{ id: 1, name: "Arto Hellas" }]);
   const [newName, setNewName] = useState("");
 
   const addNewPerson = (event) => {
     event.preventDefault();
+
+    const nameExists = persons.some((person) => person.name === newName);
+
     const newPersonObject = {
+      id: persons.length + 1,
       name: newName,
     };
 
-    setPersons(persons.concat(newPersonObject));
-    setNewName("");
+    if (nameExists || newName === "") {
+      alert(`No input provided or ${newName} is already in the phonebook`);
+    } else {
+      setPersons(persons.concat(newPersonObject));
+      setNewName("");
+    }
   };
 
   const handleNewNameChange = (event) => {
@@ -33,7 +41,7 @@ const App = () => {
       <h2>Numbers</h2>
       <ul style={{ listStyle: "none", paddingLeft: 0 }}>
         {persons.map((person) => (
-          <Person key={person.name} person={person.name} />
+          <Person key={person.name} person={person} />
         ))}
       </ul>
     </>

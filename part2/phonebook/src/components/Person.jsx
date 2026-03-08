@@ -1,3 +1,3 @@
-const Person = ({ person }) => <li>{person}</li>;
+const Person = ({ person }) => <li>{person.name}</li>;
 
 export default Person;
