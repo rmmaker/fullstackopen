@@ -1,17 +1,25 @@
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
+import axios from "axios";
 import Filter from "./components/Filter";
 import Heading from "./components/Heading";
 import PersonForm from "./components/PersonForm";
 import Persons from "./components/Persons";
 
 const App = () => {
-  const [persons, setPersons] = useState([
-    { id: 1, name: "Arto Hellas", number: "040-1234567" },
-  ]);
+  const [persons, setPersons] = useState([]);
   const [newName, setNewName] = useState("");
   const [newNumber, setNewNumber] = useState("");
   const [filterName, setFilterName] = useState("");
   const nameInputRef = useRef(null);
+
+  useEffect(() => {
+    console.log("effect");
+    axios.get("http://localhost:3001/persons").then((response) => {
+      console.log("promise fulfilled");
+      setPersons(response.data);
+    });
+  }, []);
+  console.log("rendering", persons.length, "persons");
 
   const addNewPerson = (event) => {
     event.preventDefault();
@@ -24,13 +32,18 @@ const App = () => {
       number: newNumber,
     };
 
-    if (nameExists || newName === "") {
-      alert(`No input provided or ${newName} is already in the phonebook`);
-    } else {
-      setPersons(persons.concat(newPersonObject));
+    const clearInputFields = () => {
       setNewName("");
       setNewNumber("");
       nameInputRef.current.focus();
+    };
+
+    if (nameExists || newName === "") {
+      alert(`No input provided or ${newName} is already in the phonebook`);
+      clearInputFields();
+    } else {
+      setPersons(persons.concat(newPersonObject));
+      clearInputFields();
     }
   };
 
