@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
 import Filter from "./components/Filter";
 import Heading from "./components/Heading";
 import PersonForm from "./components/PersonForm";
@@ -11,6 +11,7 @@ const App = () => {
   const [newName, setNewName] = useState("");
   const [newNumber, setNewNumber] = useState("");
   const [filterName, setFilterName] = useState("");
+  const nameInputRef = useRef(null);
 
   const addNewPerson = (event) => {
     event.preventDefault();
@@ -29,6 +30,7 @@ const App = () => {
       setPersons(persons.concat(newPersonObject));
       setNewName("");
       setNewNumber("");
+      nameInputRef.current.focus();
     }
   };
 
@@ -57,6 +59,7 @@ const App = () => {
         onSubmit={addNewPerson}
         nameValue={newName}
         nameChange={handleNewNameChange}
+        nameInputRef={nameInputRef}
         numberValue={newNumber}
         numberChange={handleNewNumberChange}
         buttonType={"submit"}
