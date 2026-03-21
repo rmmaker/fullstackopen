@@ -45,6 +45,23 @@ const App = () => {
     }
   };
 
+  const deletePerson = (id) => {
+    const person = persons.find((person) => person.id === id);
+
+    if (window.confirm(`Do you really want to delete ${person.name}?`)) {
+      personService
+        .deletePerson(id)
+        .then(() => {
+          setPersons(persons.filter((person) => person.id !== id));
+        })
+        .catch((error) => {
+          alert(`${person.name} was already deleted from the phonebook`);
+        });
+    } else {
+      return;
+    }
+  };
+
   const handleNewNameChange = (event) => {
     setNewName(event.target.value);
   };
@@ -76,7 +93,7 @@ const App = () => {
         buttonType={"submit"}
       />
       <Heading text={"Numbers"} />
-      <Persons array={personsToShow} />
+      <Persons array={personsToShow} deletePerson={deletePerson} />
     </>
   );
 };
