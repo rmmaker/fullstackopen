@@ -1,9 +1,9 @@
 import { useEffect, useRef, useState } from "react";
-import axios from "axios";
 import Filter from "./components/Filter";
 import Heading from "./components/Heading";
 import PersonForm from "./components/PersonForm";
 import Persons from "./components/Persons";
+import personService from "./services/persons";
 
 const App = () => {
   const [persons, setPersons] = useState([]);
@@ -13,13 +13,10 @@ const App = () => {
   const nameInputRef = useRef(null);
 
   useEffect(() => {
-    console.log("effect");
-    axios.get("http://localhost:3001/persons").then((response) => {
-      console.log("promise fulfilled");
-      setPersons(response.data);
+    personService.getAll().then((initialPersons) => {
+      setPersons(initialPersons);
     });
   }, []);
-  console.log("rendering", persons.length, "persons");
 
   const addNewPerson = (event) => {
     event.preventDefault();
@@ -27,7 +24,6 @@ const App = () => {
     const nameExists = persons.some((person) => person.name === newName);
 
     const newPersonObject = {
-      id: persons.length + 1,
       name: newName,
       number: newNumber,
     };
@@ -42,8 +38,10 @@ const App = () => {
       alert(`No input provided or ${newName} is already in the phonebook`);
       clearInputFields();
     } else {
-      setPersons(persons.concat(newPersonObject));
-      clearInputFields();
+      personService.create(newPersonObject).then((returnedPerson) => {
+        setPersons(persons.concat(returnedPerson));
+        clearInputFields();
+      });
     }
   };
 
