@@ -34,9 +34,31 @@ const App = () => {
       nameInputRef.current.focus();
     };
 
-    if (nameExists || newName === "") {
-      alert(`No input provided or ${newName} is already in the phonebook`);
+    if (newName === "") {
+      alert(`No input provided, please enter a name and a number`);
       clearInputFields();
+    } else if (nameExists) {
+      const foundPerson = persons.find((person) => person.name === newName);
+      if (
+        window.confirm(
+          `${foundPerson.name} is already in the phonebook, replace the old number with a new one?`,
+        )
+      ) {
+        const updatedPerson = { ...foundPerson, number: newNumber };
+        personService
+          .update(foundPerson.id, updatedPerson)
+          .then((returnedPerson) => {
+            setPersons(
+              persons.map((person) =>
+                person.id !== foundPerson.id ? person : returnedPerson,
+              ),
+            );
+            clearInputFields();
+          });
+      } else {
+        clearInputFields();
+        return;
+      }
     } else {
       personService.create(newPersonObject).then((returnedPerson) => {
         setPersons(persons.concat(returnedPerson));
